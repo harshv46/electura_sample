@@ -1,0 +1,42 @@
+{% load notifications_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Homepage</title>
+</head>
+<body>
+    <h1>Hello: {{user.username}}</h1>
+    <h3>Listed Tasks:</h3>
+    {% for t in tasks  %}
+        <div>
+        <p> Created by : {{t.creator}}<br> 
+            Description: {{t.desc}}<br> 
+            Status:{% if t.completed %} Completed {% else %} Pending {% endif %}
+        </p>
+        </div>
+    {% endfor %}
+    <div>
+        <b>Create New Task:</b><br><br>
+        <form action= "/user_tasks/" method ="post">
+            {% csrf_token %}
+            Description: <input type="text" name="newdesc"><br><br>
+            <input type="submit">
+        </form>
+    </div>
+    <div>
+        <h2>Notifications({% live_notify_badge badge_class="badge" %})</h2>
+        {% for notification in  user.notifications.unread %}
+        <div>
+            Task : {{ notification.description }}<br>	
+            Marked Completed by : <b>{{ notification.actor }}</b><br>
+            Timestamp: {{notification.timestamp}}		
+            <hr>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
